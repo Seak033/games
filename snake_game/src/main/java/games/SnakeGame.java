@@ -149,12 +149,12 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             String restartText = "Press 'R' to restart";
             metrics = g2d.getFontMetrics();
             x = (DEFAULT_SCREEN_WIDTH - metrics.stringWidth(restartText)) / 2;
-            y = DEFAULT_SCREEN_HEIGHT + (y1 + gameHeight - DEFAULT_SCREEN_HEIGHT - y1);
+            y = DEFAULT_SCREEN_HEIGHT + (y1 + gameHeight - DEFAULT_SCREEN_HEIGHT - y1) + 50;
             g2d.drawString(restartText, x, y);
 
             g2d.setColor(Color.GREEN);
             g2d.setFont(new Font("Arial", Font.BOLD, 25));
-            String backMessage = "Press 'H' to go back to Home";
+            String backMessage = "Press 'H' to homepage";
             metrics = g2d.getFontMetrics();
             x = (DEFAULT_SCREEN_WIDTH - metrics.stringWidth(backMessage)) / 2;
             y = DEFAULT_SCREEN_HEIGHT + (y1 + gameHeight - DEFAULT_SCREEN_HEIGHT - y1) + 100;
@@ -177,7 +177,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             String backMessage = "Press 'H' to go back to Home";
             metrics = g2d.getFontMetrics();
             int xPlace = (DEFAULT_SCREEN_WIDTH - metrics.stringWidth(backMessage)) / 2;
-            int yPlace = DEFAULT_SCREEN_HEIGHT - (DEFAULT_SCREEN_HEIGHT / 3);
+            int yPlace = DEFAULT_SCREEN_HEIGHT - (DEFAULT_SCREEN_HEIGHT / 3) + 75;
             g2d.drawString(backMessage, xPlace, yPlace);
         }
     }

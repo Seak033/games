@@ -5,7 +5,7 @@ import java.util.*;
 
 public class HighScoreManager {
     private static final String HIGHSCORE_FILE = "highscore.txt";
-    private static final int MAX_ENTRIES = 5;
+    private static final int MAX_ENTRIES = 10;
 
     public static List<Integer> loadHighscore() {
         List<Integer> scores = new ArrayList<>();
