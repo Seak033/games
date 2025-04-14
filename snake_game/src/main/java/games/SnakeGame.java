@@ -3,8 +3,10 @@ package games;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
-import javax.swing.Timer; 
+import javax.swing.Timer;
 
 public class SnakeGame extends JPanel implements KeyListener, ActionListener {
     private static final int DEFAULT_SCREEN_WIDTH = 800;
@@ -12,10 +14,10 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
 
     private static final int gameWidth = 580;
     private static final int gameHeight = 440;
-    
+
     private static final int x1 = 100;
     private static final int y1 = 60;
-    private static int tileSize = 20; // this is the number of squares within the game area
+    private static int tileSize = 20;
     private static FontMetrics metrics;
 
     private Image backgroundImage;
@@ -29,6 +31,9 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             this.y = y;
         }
     }
+
+    int highscore;
+
     // Snake (start)
     Tile snakeHead;
     ArrayList<Tile> snakeBody;
@@ -53,7 +58,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         this.addKeyListener(this);
         frame.setFocusable(true);
         frame.requestFocusInWindow();
-        
+
         snakeHead = new Tile(5, 5);
         snakeBody = new ArrayList<>();
 
@@ -66,6 +71,9 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
 
         gameLoop = new Timer(100, this);
         gameLoop.start();
+
+        List<Integer> scores = HighScoreManager.loadHighscore();
+        this.highscore = scores.isEmpty() ? 0 : scores.get(0);
 
     }
 
@@ -83,7 +91,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         // g2d.setColor(Color.WHITE);
         // g2d.drawRect(x1, y1, gameWidth, gameHeight);
 
-        // Grid lines
+        // // Grid lines
         // g2d.setColor(Color.LIGHT_GRAY);
         // for (int i = 0; i < gameWidth / tileSize; i++) {
         // g.drawLine(x1 + i * tileSize, y1, x1 + i * tileSize, y1 + gameHeight);
@@ -110,11 +118,10 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
         // Highscore
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 15));
-        String highscoreText = "Highscore: " + snakeBody.size();
-                
-        // Positioning the highscore text in the blank space
-        g2d.drawString(highscoreText, x1 + 10, y1 + 20);
-        
+        String scoreText = "Score: " + snakeBody.size();
+        String highscoreText = "Highscore: " + highscore;
+        g2d.drawString(scoreText, x1 + 10, y1 + 20);
+        g2d.drawString(highscoreText, x1 + 10, y1 + 40);
 
         // Game over pop-up screen
         if (gameOver) {
@@ -131,7 +138,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
 
             g2d.setColor(Color.BLUE);
             g2d.setFont(new Font("Arial", Font.BOLD, 25));
-            String gameOverScore = "Your highscore is: " + snakeBody.size();
+            String gameOverScore = "Your score is: " + snakeBody.size();
             metrics = g2d.getFontMetrics();
             x = (DEFAULT_SCREEN_WIDTH - metrics.stringWidth(gameOverScore)) / 2;
             y = DEFAULT_SCREEN_HEIGHT / 2;
@@ -153,8 +160,8 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             y = DEFAULT_SCREEN_HEIGHT + (y1 + gameHeight - DEFAULT_SCREEN_HEIGHT - y1) + 100;
             g2d.drawString(backMessage, x, y);
 
-        } 
-        
+        }
+
         // Press space bar to start
         if (!gameStarted) {
             g2d.setColor(Color.WHITE);
@@ -194,7 +201,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
                 }
             }
         }
-       
+
     }
 
     public boolean collision(Tile tile1, Tile tile2) {
@@ -247,12 +254,17 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             repaint();
             if (gameOver) {
                 gameLoop.stop();
+
+                HighScoreManager.saveHighscore(snakeBody.size());
+                List<Integer> scores = HighScoreManager.loadHighscore();
+                highscore = scores.isEmpty() ? 0 : scores.get(0);
+
             }
         }
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {   
+    public void keyPressed(KeyEvent e) {
         if (!gameStarted && e.getKeyCode() == KeyEvent.VK_SPACE) {
             gameLoop.start();
             gameStarted = true;
@@ -265,7 +277,7 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             Home homescreen = new Home();
             homescreen.homePage();
         }
-        
+
         if (gameStarted) {
             if (e.getKeyCode() == KeyEvent.VK_UP && directionY != 1) {
                 directionX = 0;
@@ -282,7 +294,6 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
             }
 
         }
-           
 
         if (gameOver && e.getKeyCode() == KeyEvent.VK_R) {
             gameOver = false;
@@ -305,9 +316,11 @@ public class SnakeGame extends JPanel implements KeyListener, ActionListener {
 
     // NOT NEEDED
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+    }
 
 }

@@ -4,10 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 
 public class Home extends JPanel implements ActionListener {
     private static final int DEFAULT_SCREEN_WIDTH = 800;
@@ -16,9 +14,8 @@ public class Home extends JPanel implements ActionListener {
     private static JButton highScore;
     private static JFrame frame;
     private static ImagePanel backgroundImage;
-    
 
-     public void homePage() {
+    public void homePage() {
         frame = new JFrame();
         frame.setTitle("Home - Snake Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,9 +50,9 @@ public class Home extends JPanel implements ActionListener {
         startButton = new CustomButton("Start Game", "src\\main\\resources\\images\\snake-home.png");
         startButton.setFont(new Font("Arial", Font.BOLD, 20));
         startButton.setFocusable(false);
-        startButton.setAlignmentX(Component.CENTER_ALIGNMENT);  
+        startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.addActionListener(e -> {
-            frame.setVisible(false); 
+            frame.setVisible(false);
             openSnakeGame(backgroundImage.getImage());
         });
         centerPanel.add(startButton);
@@ -85,8 +82,6 @@ public class Home extends JPanel implements ActionListener {
 
         frame.setVisible(true);
     }
-
-
 
     public static class CustomButton extends JButton {
         private Image image;
@@ -159,13 +154,19 @@ public class Home extends JPanel implements ActionListener {
         gameFrame.setResizable(false);
         game.requestFocus();
     }
-    
+
     private void openHighScore(Image backgroundImage) {
+        Highscore highscorePanel = new Highscore(backgroundImage);
         JFrame highScoreFrame = new JFrame("Snake Game - HighScores");
-        Highscore highscore = new Highscore(backgroundImage);
-        highScoreFrame.add(highScore);
-        highScoreFrame.revalidate();
-        highScoreFrame.repaint();
+
+        highScoreFrame.setSize(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
+        highScoreFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        highScoreFrame.setLocationRelativeTo(null);
+        highScoreFrame.setResizable(false);
+        highScoreFrame.add(highscorePanel);
+        highScoreFrame.setVisible(true);
+        SwingUtilities.invokeLater(() -> highscorePanel.requestFocusInWindow());
+
     }
 
     @Override
